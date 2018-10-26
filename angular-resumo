@@ -1,0 +1,69 @@
+git checkout -- caminho arquivo - 
+
+facilitar desenvolvimento aplicações web
+
+	.Estruturação da aplicação em camadas definidas,
+	.criação de componentes reutilizaveis, 
+	.traz infra-estrutura para integrar com o backend
+	.facilita automação dos testes
+
+
+camadas
+
+	.view - onde escreve-se telas html(leves toques de js)
+	.controller - responsável por alimentar a view
+
+	controller não conhece a view e vice e versa
+
+	.scope - scope faz a mediação entre a view e o controller
+
+	view é local que vc colocar o ng-controller
+
+
+Diretivas
+
+São extensões do html que permite novos comportamentos
+
+	.ngApp - Define as fronteiras da aplicação
+
+	.ngController - Vincula view e controller (scope)
+
+	.ngRepeat - permite efetuar iterações
+
+	.ngBind - pega algo do scope e exibe na view
+
+	.ngModel - pega algo da view e define no scope (aplicados mais em inputs, selects, text-areas)
+
+	.ngDisable - desabilitar alguma tag
+
+	.ngOptions - renderizar options de um select
+
+	.ngClass - aplicar classes dinamicamente
+
+	.ngStyle - aplicar estilos dinamicamente
+
+	.ngShow - exibir algo se a condição for verdadeira (visibilidade)
+
+	.ngHide - esconde algo se uma condição for verdadeira (visibilidade)
+
+	.ngIf - exibe algo se condição for verdadeira (altera a dom)
+
+	.ngInclude - incluir conteudo dinamicamente
+
+evitar ler o scope dentro do controller (deixa as coisas menos claras)
+tentar ao máximo usar o nome da entidade
+
+
+angular.copy -> usado para copiar objeto
+
+delete -> deletar objeto
+
+
+Filtros
+
+	Servem para  transformar o resultado de uma expressão como formatar data, converter moeda, ordernar array etc;
+	.date: máscara de data
+	.uppercase: letra maiúscula
+	.lowercase: letra minúscula
+	.filter: filtrar um array
+

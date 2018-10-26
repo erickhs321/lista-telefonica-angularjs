@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="listaTelefonica">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title ng-controller="listaTelefonicaCtrl">{{app}}</title>
+  <script src="scripts/angular-1.7.5/angular.js"></script>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+
+  <script>
+    angular.module("listaTelefonica", []);
+    angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($scope) {
+      $scope.app = "Lista Telefônica";
+      $scope.contatos = [
+        { nome: "Jose", telefone: "99999954", data: new Date(), operadora: { nome: "Oi", codigo: 14, categoria: "Celular" } },
+        { nome: "Maria", telefone: "99988888", data: new Date(), operadora: { nome: "Tim", codigo: 16, categoria: "Celular" } },
+        { nome: "Ana", telefone: "99999999", data: new Date(), operadora: { nome: "Oi", codigo: 14, categoria: "Celular" } }
+      ];
+
+      $scope.operadoras = [
+        { nome: "Oi", codigo: 14, categoria: "Celular" },
+        { nome: "Vivo", codigo: 15, categoria: "Celular" },
+        { nome: "Tim", codigo: 16, categoria: "Celular" },
+        { nome: "GVT", codigo: 17, categoria: "Telefone" },
+        { nome: "Embratel", codigo: 17, categoria: "Telefone" }
+      ];
+      $scope.selecionado = "selecionado";
+
+      $scope.adicionarContato = function (contato) {
+        $scope.contatos.push(contato);
+        delete $scope.contato;
+      };
+      $scope.existeContatoSelecionado = function (contatos) {
+        return contatos.some(function (contato) {
+          return contato.selecionado;
+        });
+      };
+      $scope.apagarContatos = function (contatos) {
+        //filtrando selecionados
+        $scope.contatos = contatos.filter(function (contato) {
+          if (!contato.selecionado)
+            return contato;
+        });
+      };
+    });
+
+  </script>
+</head>
+
+<body ng-controller="listaTelefonicaCtrl">
+  <div class="jumbo">
+    <h1>{{app}}</h1>
+    <input type="text" id="busca" ng-model="criterioDeBusca" placeholder="Pesquisar contato">
+    <div id="tabela">        
+        <table ng-show="contatos.length > 0">  
+          <thead>
+            <tr>
+              <th></th>
+              <th>Nome</th>
+              <th>Telefone</th>
+              <th>Operadora</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-class="{selecionado: contato.selecionado}" ng-repeat="contato in contatos | filter:{nome:criterioDeBusca} | orderBy:'nome'">
+              <td><input type="checkbox" ng-model="contato.selecionado"></td>
+              <td>{{contato.nome}}</td>
+              <td>{{contato.telefone}}</td>
+              <td>{{contato.operadora.nome}}</td>
+              <td>{{contato.data | date: 'dd/MM/yyyy HH:mm' }}</td>
+  
+            </tr>
+          </tbody>
+        </table>
+  
+      </div>
+      
+    <form id="contact-form">
+      <input type="text" placeholder="Nome" ng-model="contato.nome">
+      <input type="text" placeholder="Telefone" ng-model="contato.telefone">
+      <select ng-model="contato.operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras">
+        <option value="">Selecione uma Operadora</option>
+      </select>
+      <div>
+        <button ng-click="adicionarContato(contato)" ng-disabled="!contato.nome || !contato.telefone ||!contato.operadora">Adicionar
+          Contato</button>
+        <button ng-click="apagarContatos(contatos)" ng-show="existeContatoSelecionado(contatos)">
+          Apagar Contato
+        </button>
+      </div>
+
+    </form>
+
+    
+  </div>
+  <div ng-include="footer.html">
+
+  </div>
+
+</body>
+
+</html>
