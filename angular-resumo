@@ -50,6 +50,8 @@ São extensões do html que permite novos comportamentos
 
 	.ngInclude - incluir conteudo dinamicamente
 
+	.ngRequired - campo obrigatorio
+
 evitar ler o scope dentro do controller (deixa as coisas menos claras)
 tentar ao máximo usar o nome da entidade
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="listaTelefonica">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,8 @@
   <title ng-controller="listaTelefonicaCtrl">{{app}}</title>
   <script src="scripts/angular-1.7.5/angular.js"></script>
   <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+    crossorigin="anonymous">
 
   <script>
     angular.module("listaTelefonica", []);
@@ -44,6 +46,12 @@
             return contato;
         });
       };
+
+
+      $scope.orderBy = function (campo) {
+        $scope.criterioDeOrdenacao = campo;
+        $scope.direcaoDaOrdenacao = !$scope.direcaoDaOrdenacao;
+      }
     });
 
   </script>
@@ -53,39 +61,49 @@
   <div class="jumbo">
     <h1>{{app}}</h1>
     <input type="text" id="busca" ng-model="criterioDeBusca" placeholder="Pesquisar contato">
-    <div id="tabela">        
-        <table ng-show="contatos.length > 0">  
-          <thead>
-            <tr>
-              <th></th>
-              <th>Nome</th>
-              <th>Telefone</th>
-              <th>Operadora</th>
-              <th>Data</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-class="{selecionado: contato.selecionado}" ng-repeat="contato in contatos | filter:{nome:criterioDeBusca} | orderBy:'nome'">
-              <td><input type="checkbox" ng-model="contato.selecionado"></td>
-              <td>{{contato.nome}}</td>
-              <td>{{contato.telefone}}</td>
-              <td>{{contato.operadora.nome}}</td>
-              <td>{{contato.data | date: 'dd/MM/yyyy HH:mm' }}</td>
-  
-            </tr>
-          </tbody>
-        </table>
-  
-      </div>
-      
-    <form id="contact-form">
-      <input type="text" placeholder="Nome" ng-model="contato.nome">
-      <input type="text" placeholder="Telefone" ng-model="contato.telefone">
-      <select ng-model="contato.operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras">
-        <option value="">Selecione uma Operadora</option>
-      </select>
+    <div id="tabela">
+      <table ng-show="contatos.length > 0">
+        <thead>
+          <tr>
+            <th></th>
+            <th><a href="" ng-click="orderBy('nome')">Nome</a></th>
+            <th><a href="" ng-click="orderBy('telefone')">Telefone</a></th>
+            <th>Operadora</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-class="{selecionado: contato.selecionado}" ng-repeat="contato in contatos | filter:{nome:criterioDeBusca} | orderBy:criterioDeOrdenacao:direcaoDaOrdenacao">
+            <td><input type="checkbox" ng-model="contato.selecionado"></td>
+            <td>{{contato.nome}}</td>
+            <td>{{contato.telefone}}</td>
+            <td>{{contato.operadora.nome}}</td>
+            <td>{{contato.data | date: 'dd/MM/yyyy HH:mm' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <form id="contact-form" name="contatoForm">
       <div>
-        <button ng-click="adicionarContato(contato)" ng-disabled="!contato.nome || !contato.telefone ||!contato.operadora">Adicionar
+        <input type="text" placeholder="Nome" ng-model="contato.nome" ng-required="true"> <i class="fas fa-times-circle"
+          ng-show="!contato.nome"></i>
+      </div>
+      <div>
+        <input type="text" placeholder="Telefone" ng-model="contato.telefone" ng-required="true"><i class="fas fa-times-circle"
+          ng-show="!contato.telefone"></i>
+      </div>
+      <div>
+        <select ng-model="contato.operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras | orderBy: 'nome'"
+          ng-required="true">
+          <option value="">Selecione uma Operadora</option>
+        </select>
+        <i class="fas fa-times-circle" ng-show="!contato.operadora"></i>
+      </div>
+
+      <div>
+        <button ng-click="adicionarContato(contato)" ng-model="contato.data" ng-disabled="contatoForm.$invalid">Adicionar
           Contato</button>
         <button ng-click="apagarContatos(contatos)" ng-show="existeContatoSelecionado(contatos)">
           Apagar Contato
@@ -94,7 +112,7 @@
 
     </form>
 
-    
+
   </div>
   <div ng-include="footer.html">
 

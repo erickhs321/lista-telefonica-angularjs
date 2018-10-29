@@ -55,7 +55,7 @@ table th:first-of-type{
 
 #busca, #contact-form input, #contact-form select{
   margin: 2px auto;
-  width: 95%;
+  width: 90vw;
   font-size: 15px;
   padding: 3px 5px; 
 }
@@ -101,4 +101,12 @@ button:disabled{
 
 #busca{
   width: 40%; 
+}
+
+form i{
+  color: red;
+}
+
+form > div:nth-child(1), form > div:nth-child(2), form > div:nth-child(3){
+  flex-direction: row;
 }
