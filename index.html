@@ -7,12 +7,13 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title ng-controller="listaTelefonicaCtrl">{{app}}</title>
   <script src="scripts/angular-1.7.5/angular.js"></script>
+  <script src="scripts/angular-1.7.5/angular-messages.js"></script>
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
     crossorigin="anonymous">
 
   <script>
-    angular.module("listaTelefonica", []);
+    angular.module("listaTelefonica", ["ngMessages"]);
     angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($scope) {
       $scope.app = "Lista Telefônica";
       $scope.contatos = [
@@ -33,12 +34,15 @@
       $scope.adicionarContato = function (contato) {
         $scope.contatos.push(contato);
         delete $scope.contato;
+        $scope.contatoForm.$setPristine();
       };
+
       $scope.existeContatoSelecionado = function (contatos) {
         return contatos.some(function (contato) {
           return contato.selecionado;
         });
       };
+
       $scope.apagarContatos = function (contatos) {
         //filtrando selecionados
         $scope.contatos = contatos.filter(function (contato) {
@@ -47,11 +51,12 @@
         });
       };
 
-
       $scope.orderBy = function (campo) {
         $scope.criterioDeOrdenacao = campo;
         $scope.direcaoDaOrdenacao = !$scope.direcaoDaOrdenacao;
       }
+
+      $scope.error = 'deu erro';
     });
 
   </script>
@@ -87,33 +92,35 @@
 
     <form id="contact-form" name="contatoForm">
       <div>
-        <input type="text" placeholder="Nome" ng-model="contato.nome" ng-required="true"> <i class="fas fa-times-circle"
-          ng-show="!contato.nome"></i>
-      </div>
-      <div>
-        <input type="text" placeholder="Telefone" ng-model="contato.telefone" ng-required="true"><i class="fas fa-times-circle"
-          ng-show="!contato.telefone"></i>
-      </div>
-      <div>
-        <select ng-model="contato.operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras | orderBy: 'nome'"
-          ng-required="true">
-          <option value="">Selecione uma Operadora</option>
-        </select>
-        <i class="fas fa-times-circle" ng-show="!contato.operadora"></i>
+        <input type="text" name='nome' placeholder="Nome" ng-model="contato.nome" ng-required="true" ng-minlength="10">
       </div>
 
       <div>
-        <button ng-click="adicionarContato(contato)" ng-model="contato.data" ng-disabled="contatoForm.$invalid">Adicionar
+        <input type="text" name='telefone' placeholder="Telefone" ng-model="contato.telefone" ng-required="true">
+      </div>
+
+      <div>
+        <select ng-model="contato.operadora" name="operadora" ng-options="operadora.nome group by operadora.categoria for operadora in operadoras | orderBy: 'nome'"
+          ng-required="true">
+          <option value="">Selecione uma Operadora</option>
+        </select>
+      </div>
+
+      <div>
+        <button ng-click="adicionarContato(contato)" ng-model="contato.data" ng-disabled="contatoForm.$error.required">Adicionar
           Contato</button>
         <button ng-click="apagarContatos(contatos)" ng-show="existeContatoSelecionado(contatos)">
           Apagar Contato
         </button>
       </div>
-
+      <div ng-show="contatoForm.nome.$dirty" ng-messages="contatoForm.nome.$error" style="background-color:salmon">
+        <div ng-message="required">Preencha o campo nome!</div>
+        <div ng-message="minlength">O campo requer no mínimo 10 caracteres</div>
+      </div>  
     </form>
-
-
+   
   </div>
+
   <div ng-include="footer.html">
 
   </div>
